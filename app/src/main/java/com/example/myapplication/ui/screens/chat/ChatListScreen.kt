@@ -1,10 +1,13 @@
 package com.example.myapplication.ui.screens.chat
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,7 +23,9 @@ import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChatListScreen(onChatClick: (ChatRoom) -> Unit) {
+fun ChatListScreen(onBackClick: () -> Unit, onChatClick: (ChatRoom) -> Unit) {
+    BackHandler(onBack = onBackClick)
+
     val sampleChats = listOf(
         ChatRoom("1", "101", "أحمد", "", "كيف حالك؟ أتمنى أن تكون بخير", Date().time, 2),
         ChatRoom("2", "102", "سارة", "", "موافق على طلب الاهتمام", Date().time - 3600000, 0)
@@ -29,7 +34,12 @@ fun ChatListScreen(onChatClick: (ChatRoom) -> Unit) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("المحادثات الجادة", fontWeight = FontWeight.Bold) }
+                title = { Text("المحادثات الجادة", fontWeight = FontWeight.Bold) },
+                navigationIcon = {
+                    IconButton(onClick = onBackClick) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                    }
+                }
             )
         }
     ) { padding ->
@@ -51,7 +61,6 @@ fun ChatListItem(chat: ChatRoom, onClick: (ChatRoom) -> Unit) {
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Avatar Placeholder
         Surface(
             modifier = Modifier.size(50.dp).clip(CircleShape),
             color = MaterialTheme.colorScheme.primaryContainer
