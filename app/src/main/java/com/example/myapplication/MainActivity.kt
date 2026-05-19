@@ -74,21 +74,19 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                         MithaqScreen.DISCOVERY -> {
-                            DiscoveryScreen(onSafetyClick = { currentScreen = MithaqScreen.SAFETY_CENTER })
-                            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
-                                Button(
-                                    onClick = { currentScreen = MithaqScreen.CHAT_LIST },
-                                    modifier = Modifier.padding(bottom = 80.dp)
-                                ) {
-                                    Text("انتقل للمحادثات (تجربة)")
-                                }
-                            }
+                            DiscoveryScreen(
+                                onSafetyClick = { currentScreen = MithaqScreen.SAFETY_CENTER },
+                                onChatClick = { currentScreen = MithaqScreen.CHAT_LIST }
+                            )
                         }
                         MithaqScreen.CHAT_LIST -> {
-                            ChatListScreen(onChatClick = { chatRoom ->
-                                selectedChatRoomName = chatRoom.participantName
-                                currentScreen = MithaqScreen.CHAT_ROOM
-                            })
+                            ChatListScreen(
+                                onBackClick = { currentScreen = MithaqScreen.DISCOVERY },
+                                onChatClick = { chatRoom ->
+                                    selectedChatRoomName = chatRoom.participantName
+                                    currentScreen = MithaqScreen.CHAT_ROOM
+                                }
+                            )
                         }
                         MithaqScreen.CHAT_ROOM -> {
                             ChatRoomScreen(
