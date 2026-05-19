@@ -24,6 +24,7 @@ import com.example.myapplication.ui.screens.chat.ChatListScreen
 import com.example.myapplication.ui.screens.chat.ChatRoomScreen
 import com.example.myapplication.ui.screens.discovery.DiscoveryScreen
 import com.example.myapplication.ui.screens.profile.ProfileSetupScreen
+import com.example.myapplication.ui.theme.ThemeManager
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
@@ -37,7 +38,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            MyApplicationTheme {
+            val isDarkMode by ThemeManager.isDarkMode
+            MyApplicationTheme(darkTheme = isDarkMode) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background

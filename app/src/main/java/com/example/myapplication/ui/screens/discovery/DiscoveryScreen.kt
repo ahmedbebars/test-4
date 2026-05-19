@@ -6,7 +6,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.filled.Verified
@@ -26,6 +28,7 @@ import com.example.myapplication.data.model.PhotoPrivacy
 import com.example.myapplication.data.model.User
 import com.example.myapplication.data.model.VerificationLevel
 import com.example.myapplication.data.repository.MockData
+import com.example.myapplication.ui.theme.ThemeManager
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,6 +37,14 @@ fun DiscoveryScreen() {
         topBar = {
             CenterAlignedTopAppBar(
                 title = { Text("اكتشاف الشركاء", fontWeight = FontWeight.Bold) },
+                actions = {
+                    IconButton(onClick = { ThemeManager.toggleTheme() }) {
+                        Icon(
+                            imageVector = if (ThemeManager.isDarkMode.value) Icons.Default.LightMode else Icons.Default.DarkMode,
+                            contentDescription = "Toggle Theme"
+                        )
+                    }
+                },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onPrimary

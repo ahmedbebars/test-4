@@ -1,3 +1,12 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">ميثاق</string>
+    <string name="login">دخول</string>
+    <string name="signup">تسجيل جديد</string>
+    <string name="email">البريد الإلكتروني</string>
+    <string name="password">كلمة السر</string>
+    <string name="discovery">اكتشاف</string>
+    <string name="chats">المحادثات</string>
+    <string name="settings">الإعدادات</string>
+    <string name="dark_mode">الوضع الليلي</string>
+    <string name="language">اللغة</string>
 </resources>
