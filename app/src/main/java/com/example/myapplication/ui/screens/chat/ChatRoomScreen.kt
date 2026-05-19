@@ -17,7 +17,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.myapplication.data.firebase.FirebaseService
 import com.example.myapplication.data.model.ChatMessage
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -25,13 +27,10 @@ import java.util.*
 @Composable
 fun ChatRoomScreen(participantName: String, onBackClick: () -> Unit) {
     var messageText by remember { mutableStateOf("") }
-    val messages = remember {
-        mutableStateListOf(
-            ChatMessage("1", "other", "السلام عليكم، قرأت ملفك الشخصي وأعجبني اهتمامك بالتعليم."),
-            ChatMessage("2", "me", "وعليكم السلام، شكراً لك. هذا من فضل الله. ما هو تخصصك؟"),
-            ChatMessage("3", "other", "أنا مهندس برمجيات، وأبحث عن شريكة تقدر العلم والعمل.")
-        )
-    }
+    val scope = rememberCoroutineScope()
+    
+    // Fetch messages from Firebase in real-time
+    val messages by FirebaseService.getMessages("room_1").collectAsState(initial = emptyList())
 
     Scaffold(
         topBar = {
@@ -60,8 +59,10 @@ fun ChatRoomScreen(participantName: String, onBackClick: () -> Unit) {
                 onValueChange = { messageText = it },
                 onSendClick = {
                     if (messageText.isNotBlank()) {
-                        messages.add(ChatMessage(UUID.randomUUID().toString(), "me", messageText))
-                        messageText = ""
+                        scope.launch {
+                            FirebaseService.sendMessage("room_1", messageText)
+                            messageText = ""
+                        }
                     }
                 }
             )
@@ -75,7 +76,7 @@ fun ChatRoomScreen(participantName: String, onBackClick: () -> Unit) {
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(messages) { message ->
-                MessageBubble(message, isMe = message.senderId == "me")
+                MessageBubble(message, isMe = message.senderId == FirebaseService.getCurrentUserId())
             }
         }
     }

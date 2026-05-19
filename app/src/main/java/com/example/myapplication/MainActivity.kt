@@ -18,16 +18,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import com.example.myapplication.data.firebase.FirebaseService
+import com.example.myapplication.ui.screens.auth.LoginScreen
+import com.example.myapplication.ui.screens.auth.SignUpScreen
 import com.example.myapplication.ui.screens.chat.ChatListScreen
 import com.example.myapplication.ui.screens.chat.ChatRoomScreen
 import com.example.myapplication.ui.screens.discovery.DiscoveryScreen
 import com.example.myapplication.ui.screens.profile.ProfileSetupScreen
 import com.example.myapplication.ui.theme.MyApplicationTheme
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
-import java.util.UUID
 
 enum class MithaqScreen {
-    PROFILE_SETUP, DISCOVERY, CHAT_LIST, CHAT_ROOM
+    LOGIN, SIGNUP, PROFILE_SETUP, DISCOVERY, CHAT_LIST, CHAT_ROOM
 }
 
 class MainActivity : ComponentActivity() {
@@ -40,24 +42,36 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    var currentScreen by remember { mutableStateOf(MithaqScreen.PROFILE_SETUP) }
+                    val auth = FirebaseAuth.getInstance()
+                    var currentScreen by remember { 
+                        mutableStateOf(if (auth.currentUser != null) MithaqScreen.DISCOVERY else MithaqScreen.LOGIN) 
+                    }
                     var selectedChatRoomName by remember { mutableStateOf("") }
-                    val userId = remember { UUID.randomUUID().toString() } // Temporary ID
 
                     when (currentScreen) {
+                        MithaqScreen.LOGIN -> {
+                            LoginScreen(
+                                onLoginSuccess = { currentScreen = MithaqScreen.DISCOVERY },
+                                onNavigateToSignUp = { currentScreen = MithaqScreen.SIGNUP }
+                            )
+                        }
+                        MithaqScreen.SIGNUP -> {
+                            SignUpScreen(
+                                onSignUpSuccess = { currentScreen = MithaqScreen.PROFILE_SETUP },
+                                onNavigateToLogin = { currentScreen = MithaqScreen.LOGIN }
+                            )
+                        }
                         MithaqScreen.PROFILE_SETUP -> {
                             ProfileSetupScreen { user ->
-                                // Save to Firebase real-time
                                 lifecycleScope.launch {
-                                    FirebaseService.saveUserProfile(user.copy(id = userId))
+                                    FirebaseService.saveUserProfile(user)
                                     currentScreen = MithaqScreen.DISCOVERY
-                                    Toast.makeText(this@MainActivity, "تم حفظ ملفك في السحابة!", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(this@MainActivity, "تم حفظ ملفك بنجاح!", Toast.LENGTH_SHORT).show()
                                 }
                             }
                         }
                         MithaqScreen.DISCOVERY -> {
                             DiscoveryScreen()
-                            // Temporarily adding a way to navigate to chat for testing
                             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
                                 Button(
                                     onClick = { currentScreen = MithaqScreen.CHAT_LIST },
