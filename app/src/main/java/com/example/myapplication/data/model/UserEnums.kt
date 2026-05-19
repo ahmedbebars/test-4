@@ -15,3 +15,19 @@ enum class EducationLevel {
 enum class ReligiousCommitment {
     VERY_RELIGIOUS, RELIGIOUS, MODERATE, NOT_RELIGIOUS
 }
+
+enum class PrayerFrequency {
+    ALWAYS, SOMETIMES, RARELY, NEVER
+}
+
+enum class HijabStatus {
+    HIJABI, NIQABI, NOT_HIJABI, NOT_APPLICABLE
+}
+
+enum class PolygamyStance {
+    ACCEPT, REJECT, DISCUSSABLE, NOT_APPLICABLE
+}
+
+enum class TravelWillingness {
+    WILLING, NOT_WILLING, DISCUSSABLE
+}

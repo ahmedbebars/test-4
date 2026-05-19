@@ -25,6 +25,11 @@ fun ProfileSetupScreen(onComplete: (User) -> Unit) {
     var profession by remember { mutableStateOf("") }
     var selectedEducation by remember { mutableStateOf(EducationLevel.BACHELOR) }
     var bio by remember { mutableStateOf("") }
+    
+    // New Advanced States
+    var prayer by remember { mutableStateOf(PrayerFrequency.ALWAYS) }
+    var travel by remember { mutableStateOf(TravelWillingness.DISCUSSABLE) }
+    var smoke by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -48,13 +53,13 @@ fun ProfileSetupScreen(onComplete: (User) -> Unit) {
         ) {
             // Progress Indicator
             LinearProgressIndicator(
-                progress = step / 3f,
+                progress = step / 4f,
                 modifier = Modifier.fillMaxWidth(),
                 color = MaterialTheme.colorScheme.secondary
             )
             
             Text(
-                text = "الخطوة $step من 3",
+                text = "الخطوة $step من 4",
                 fontSize = 14.sp,
                 color = MaterialTheme.colorScheme.secondary
             )
@@ -70,7 +75,12 @@ fun ProfileSetupScreen(onComplete: (User) -> Unit) {
                     profession, { profession = it },
                     selectedEducation, { selectedEducation = it }
                 )
-                3 -> StepBio(bio, { bio = it })
+                3 -> StepReligiousInfo(
+                    prayer, { prayer = it },
+                    travel, { travel = it },
+                    smoke, { smoke = it }
+                )
+                4 -> StepBio(bio, { bio = it })
             }
 
             Spacer(modifier = Modifier.weight(1f))
@@ -90,7 +100,7 @@ fun ProfileSetupScreen(onComplete: (User) -> Unit) {
                 
                 Button(
                     onClick = {
-                        if (step < 3) step++
+                        if (step < 4) step++
                         else {
                             onComplete(User(
                                 firstName = firstName,
@@ -99,16 +109,64 @@ fun ProfileSetupScreen(onComplete: (User) -> Unit) {
                                 socialStatus = selectedStatus,
                                 profession = profession,
                                 education = selectedEducation,
-                                bio = bio
+                                bio = bio,
+                                prayerFrequency = prayer,
+                                travelWillingness = travel,
+                                smoke = smoke
                             ))
                         }
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text(if (step == 3) "إتمام التسجيل" else "التالي")
+                    Text(if (step == 4) "إتمام التسجيل" else "التالي")
                 }
             }
         }
+    }
+}
+
+@Composable
+fun StepReligiousInfo(
+    prayer: PrayerFrequency, onPrayerChange: (PrayerFrequency) -> Unit,
+    travel: TravelWillingness, onTravelChange: (TravelWillingness) -> Unit,
+    smoke: Boolean, onSmokeChange: (Boolean) -> Unit
+) {
+    Text("الالتزام ونمط الحياة", style = MaterialTheme.typography.titleLarge)
+    
+    Text("المحافظة على الصلاة")
+    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+        PrayerFrequency.values().forEach {
+            FilterChip(
+                selected = prayer == it,
+                onClick = { onPrayerChange(it) },
+                label = { Text(when(it) {
+                    PrayerFrequency.ALWAYS -> "دائماً"
+                    PrayerFrequency.SOMETIMES -> "أحياناً"
+                    PrayerFrequency.RARELY -> "نادراً"
+                    PrayerFrequency.NEVER -> "لا أصلي"
+                }, fontSize = 10.sp) }
+            )
+        }
+    }
+
+    Text("الاستعداد للسفر/الانتقال")
+    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+        TravelWillingness.values().forEach {
+            FilterChip(
+                selected = travel == it,
+                onClick = { onTravelChange(it) },
+                label = { Text(when(it) {
+                    TravelWillingness.WILLING -> "موافق"
+                    TravelWillingness.NOT_WILLING -> "غير موافق"
+                    TravelWillingness.DISCUSSABLE -> "قابل للنقاش"
+                }, fontSize = 10.sp) }
+            )
+        }
+    }
+
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Checkbox(checked = smoke, onCheckedChange = onSmokeChange)
+        Text("هل أنت مدخن؟")
     }
 }
 
