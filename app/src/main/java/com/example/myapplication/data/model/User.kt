@@ -14,7 +14,7 @@ data class User(
     val bio: String = "",
     val partnerExpectations: String = "",
     val profileImageUrl: String = "",
-    val isVerified: Boolean = false,
+    val verificationLevel: VerificationLevel = VerificationLevel.NONE,
     val photoPrivacyType: PhotoPrivacy = PhotoPrivacy.BLURRED,
     
     // Advanced Muslima-style fields

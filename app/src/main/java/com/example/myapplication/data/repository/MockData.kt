@@ -14,6 +14,7 @@ object MockData {
             location = "القاهرة",
             religion = ReligiousCommitment.RELIGIOUS,
             photoPrivacyType = PhotoPrivacy.BLURRED,
+            verificationLevel = VerificationLevel.IDENTITY_VERIFIED,
             bio = "أبحث عن شخص جاد ومحترم يقدر الحياة الزوجية."
         ),
         User(
@@ -26,6 +27,7 @@ object MockData {
             location = "الرياض",
             religion = ReligiousCommitment.MODERATE,
             photoPrivacyType = PhotoPrivacy.PUBLIC,
+            verificationLevel = VerificationLevel.PHOTO_VERIFIED,
             bio = "مهتم بالثقافة والرياضة، وأسعى لبناء أسرة مستقرة."
         ),
         User(

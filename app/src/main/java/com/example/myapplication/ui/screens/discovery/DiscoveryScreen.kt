@@ -8,7 +8,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.filled.Verified
+import androidx.compose.material.icons.filled.VerifiedUser
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myapplication.data.model.PhotoPrivacy
 import com.example.myapplication.data.model.User
+import com.example.myapplication.data.model.VerificationLevel
 import com.example.myapplication.data.repository.MockData
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -90,16 +93,34 @@ fun UserCard(user: User) {
                     }
                 }
 
-                // Verification Badge
-                if (user.isVerified) {
-                    Icon(
-                        imageVector = Icons.Default.Verified,
-                        contentDescription = "Verified",
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier
-                            .align(Alignment.TopEnd)
-                            .padding(8.dp)
-                    )
+                // Verification Badges Section
+                Row(
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    when (user.verificationLevel) {
+                        VerificationLevel.IDENTITY_VERIFIED -> {
+                            Badge(containerColor = Color(0xFF4CAF50)) { // Green for ID
+                                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(2.dp)) {
+                                    Icon(Icons.Default.Shield, contentDescription = null, modifier = Modifier.size(12.dp), tint = Color.White)
+                                    Spacer(modifier = Modifier.width(2.dp))
+                                    Text("هوية موثقة", fontSize = 10.sp, color = Color.White)
+                                }
+                            }
+                        }
+                        VerificationLevel.PHOTO_VERIFIED -> {
+                            Badge(containerColor = MaterialTheme.colorScheme.primary) { // Blue for Photo
+                                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(2.dp)) {
+                                    Icon(Icons.Default.Verified, contentDescription = null, modifier = Modifier.size(12.dp), tint = Color.White)
+                                    Spacer(modifier = Modifier.width(2.dp))
+                                    Text("صورة مؤكدة", fontSize = 10.sp, color = Color.White)
+                                }
+                            }
+                        }
+                        VerificationLevel.NONE -> {}
+                    }
                 }
             }
 

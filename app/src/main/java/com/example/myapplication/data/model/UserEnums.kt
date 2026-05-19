@@ -31,3 +31,7 @@ enum class PolygamyStance {
 enum class TravelWillingness {
     WILLING, NOT_WILLING, DISCUSSABLE
 }
+
+enum class VerificationLevel {
+    NONE, PHOTO_VERIFIED, IDENTITY_VERIFIED
+}
