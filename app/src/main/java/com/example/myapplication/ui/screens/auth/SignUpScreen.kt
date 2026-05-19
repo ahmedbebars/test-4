@@ -1,10 +1,13 @@
 package com.example.myapplication.ui.screens.auth
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
@@ -64,6 +67,29 @@ fun SignUpScreen(onSignUpSuccess: () -> Unit, onNavigateToLogin: () -> Unit) {
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("تسجيل")
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text("أو", fontSize = 14.sp, color = Color.Gray)
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        OutlinedButton(
+            onClick = { /* Google Sign Up Logic */ },
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.Black)
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    imageVector = Icons.Default.AccountCircle, 
+                    contentDescription = "Google Icon",
+                    modifier = Modifier.size(18.dp),
+                    tint = Color(0xFF4285F4)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text("التسجيل بواسطة جوجل")
+            }
         }
 
         TextButton(onClick = onNavigateToLogin) {
