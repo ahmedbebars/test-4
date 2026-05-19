@@ -32,11 +32,16 @@ import com.example.myapplication.ui.theme.ThemeManager
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DiscoveryScreen() {
+fun DiscoveryScreen(onSafetyClick: () -> Unit) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 title = { Text("اكتشاف الشركاء", fontWeight = FontWeight.Bold) },
+                navigationIcon = {
+                    IconButton(onClick = onSafetyClick) {
+                        Icon(Icons.Default.Shield, contentDescription = "Safety Center", tint = MaterialTheme.colorScheme.primary)
+                    }
+                },
                 actions = {
                     IconButton(onClick = { ThemeManager.toggleTheme() }) {
                         Icon(

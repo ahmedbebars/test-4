@@ -24,13 +24,14 @@ import com.example.myapplication.ui.screens.chat.ChatListScreen
 import com.example.myapplication.ui.screens.chat.ChatRoomScreen
 import com.example.myapplication.ui.screens.discovery.DiscoveryScreen
 import com.example.myapplication.ui.screens.profile.ProfileSetupScreen
+import com.example.myapplication.ui.screens.safety.SafetyCenterScreen
 import com.example.myapplication.ui.theme.ThemeManager
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
 enum class MithaqScreen {
-    LOGIN, SIGNUP, PROFILE_SETUP, DISCOVERY, CHAT_LIST, CHAT_ROOM
+    LOGIN, SIGNUP, PROFILE_SETUP, DISCOVERY, CHAT_LIST, CHAT_ROOM, SAFETY_CENTER
 }
 
 class MainActivity : ComponentActivity() {
@@ -73,7 +74,7 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                         MithaqScreen.DISCOVERY -> {
-                            DiscoveryScreen()
+                            DiscoveryScreen(onSafetyClick = { currentScreen = MithaqScreen.SAFETY_CENTER })
                             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
                                 Button(
                                     onClick = { currentScreen = MithaqScreen.CHAT_LIST },
@@ -94,6 +95,9 @@ class MainActivity : ComponentActivity() {
                                 participantName = selectedChatRoomName,
                                 onBackClick = { currentScreen = MithaqScreen.CHAT_LIST }
                             )
+                        }
+                        MithaqScreen.SAFETY_CENTER -> {
+                            SafetyCenterScreen(onBackClick = { currentScreen = MithaqScreen.DISCOVERY })
                         }
                     }
                 }
