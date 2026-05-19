@@ -29,7 +29,8 @@ object FirebaseService {
             "prayerFrequency" to user.prayerFrequency.name,
             "travelWillingness" to user.travelWillingness.name,
             "smoke" to user.smoke,
-            "wantChildren" to user.wantChildren
+            "wantChildren" to user.wantChildren,
+            "profileImageUrl" to user.profileImageUrl
         )
         usersCollection.document(user.id).set(userMap).await()
     }

@@ -30,6 +30,7 @@ fun ProfileSetupScreen(onComplete: (User) -> Unit) {
     var prayer by remember { mutableStateOf(PrayerFrequency.ALWAYS) }
     var travel by remember { mutableStateOf(TravelWillingness.DISCUSSABLE) }
     var smoke by remember { mutableStateOf(false) }
+    var profileImageUrl by remember { mutableStateOf("") }
 
     Scaffold(
         topBar = {
@@ -78,7 +79,8 @@ fun ProfileSetupScreen(onComplete: (User) -> Unit) {
                 3 -> StepReligiousInfo(
                     prayer, { prayer = it },
                     travel, { travel = it },
-                    smoke, { smoke = it }
+                    smoke, { smoke = it },
+                    profileImageUrl, { profileImageUrl = it }
                 )
                 4 -> StepBio(bio, { bio = it })
             }
@@ -112,7 +114,8 @@ fun ProfileSetupScreen(onComplete: (User) -> Unit) {
                                 bio = bio,
                                 prayerFrequency = prayer,
                                 travelWillingness = travel,
-                                smoke = smoke
+                                smoke = smoke,
+                                profileImageUrl = profileImageUrl
                             ))
                         }
                     },
@@ -129,9 +132,18 @@ fun ProfileSetupScreen(onComplete: (User) -> Unit) {
 fun StepReligiousInfo(
     prayer: PrayerFrequency, onPrayerChange: (PrayerFrequency) -> Unit,
     travel: TravelWillingness, onTravelChange: (TravelWillingness) -> Unit,
-    smoke: Boolean, onSmokeChange: (Boolean) -> Unit
+    smoke: Boolean, onSmokeChange: (Boolean) -> Unit,
+    imageUrl: String, onImageUrlChange: (String) -> Unit
 ) {
     Text("الالتزام ونمط الحياة", style = MaterialTheme.typography.titleLarge)
+    
+    OutlinedTextField(
+        value = imageUrl,
+        onValueChange = onImageUrlChange,
+        label = { Text("رابط الصورة الشخصية") },
+        modifier = Modifier.fillMaxWidth(),
+        placeholder = { Text("https://example.com/photo.jpg") }
+    )
     
     Text("المحافظة على الصلاة")
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
