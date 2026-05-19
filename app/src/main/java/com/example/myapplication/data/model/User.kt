@@ -2,12 +2,22 @@ package com.example.myapplication.data.model
 
 data class User(
     val id: String = "",
-    val name: String = "",
+    val firstName: String = "",
     val age: Int = 0,
-    val gender: String = "", // "Male" or "Female"
-    val job: String = "",
+    val gender: Gender = Gender.UNKNOWN,
+    val socialStatus: SocialStatus = SocialStatus.SINGLE,
+    val education: EducationLevel = EducationLevel.OTHER,
+    val profession: String = "",
     val location: String = "",
+    val religion: ReligiousCommitment = ReligiousCommitment.MODERATE,
+    val height: Int = 0,
     val bio: String = "",
-    val expectations: String = "", // ماذا يتوقع في شريك حياته
-    val profileImageUrl: String = ""
+    val partnerExpectations: String = "",
+    val profileImageUrl: String = "",
+    val isVerified: Boolean = false,
+    val photoPrivacyType: PhotoPrivacy = PhotoPrivacy.BLURRED
 )
+
+enum class PhotoPrivacy {
+    PUBLIC, BLURRED, PRIVATE
+}
