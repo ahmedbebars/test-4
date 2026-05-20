@@ -13,6 +13,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -33,7 +34,7 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
 enum class MithaqScreen {
-    LOGIN, SIGNUP, VERIFY_EMAIL, PROFILE_SETUP, DISCOVERY, CHAT_LIST, CHAT_ROOM, SAFETY_CENTER, MY_PROFILE
+    LOADING, LOGIN, SIGNUP, VERIFY_EMAIL, PROFILE_SETUP, DISCOVERY, CHAT_LIST, CHAT_ROOM, SAFETY_CENTER, MY_PROFILE
 }
 
 class MainActivity : ComponentActivity() {
@@ -48,20 +49,39 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val auth = FirebaseAuth.getInstance()
-                    var currentScreen by remember { 
-                        val user = auth.currentUser
-                        mutableStateOf(
-                            if (user != null) {
-                                if (user.isEmailVerified) MithaqScreen.DISCOVERY else MithaqScreen.VERIFY_EMAIL
-                            } else MithaqScreen.LOGIN
-                        )
-                    }
+                    var currentScreen by remember { mutableStateOf(MithaqScreen.LOADING) }
                     var selectedChatRoomName by remember { mutableStateOf("") }
 
+                    // Intelligent Session Check
+                    LaunchedEffect(Unit) {
+                        val user = auth.currentUser
+                        if (user != null) {
+                            if (!user.isEmailVerified) {
+                                currentScreen = MithaqScreen.VERIFY_EMAIL
+                            } else {
+                                // Check if profile exists in Cloud
+                                val profile = FirebaseService.getMyProfile()
+                                currentScreen = if (profile != null) MithaqScreen.DISCOVERY else MithaqScreen.PROFILE_SETUP
+                            }
+                        } else {
+                            currentScreen = MithaqScreen.LOGIN
+                        }
+                    }
+
                     when (currentScreen) {
+                        MithaqScreen.LOADING -> {
+                            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+                            }
+                        }
                         MithaqScreen.LOGIN -> {
                             LoginScreen(
-                                onLoginSuccess = { currentScreen = MithaqScreen.DISCOVERY },
+                                onLoginSuccess = { 
+                                    lifecycleScope.launch {
+                                        val profile = FirebaseService.getMyProfile()
+                                        currentScreen = if (profile != null) MithaqScreen.DISCOVERY else MithaqScreen.PROFILE_SETUP
+                                    }
+                                },
                                 onNavigateToSignUp = { currentScreen = MithaqScreen.SIGNUP }
                             )
                         }
