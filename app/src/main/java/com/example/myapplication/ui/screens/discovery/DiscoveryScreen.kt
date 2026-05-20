@@ -38,7 +38,7 @@ import com.example.myapplication.ui.theme.ThemeManager
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DiscoveryScreen(onSafetyClick: () -> Unit, onChatClick: () -> Unit) {
+fun DiscoveryScreen(onSafetyClick: () -> Unit, onChatClick: () -> Unit, onProfileClick: () -> Unit) {
     var showLanguageDialog by remember { mutableStateOf(false) }
 
     if (showLanguageDialog) {
@@ -67,6 +67,9 @@ fun DiscoveryScreen(onSafetyClick: () -> Unit, onChatClick: () -> Unit) {
                     }
                 },
                 actions = {
+                    IconButton(onClick = onProfileClick) {
+                        Icon(Icons.Default.Person, contentDescription = "My Profile")
+                    }
                     IconButton(onClick = { showLanguageDialog = true }) {
                         Icon(Icons.Default.Language, contentDescription = "Change Language")
                     }
@@ -235,7 +238,12 @@ fun UserCard(user: User) {
 
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Button(
-                        onClick = { },
+                        onClick = { 
+                            scope.launch {
+                                FirebaseService.sendMarriageRequest(user.id)
+                                Toast.makeText(context, "تم إرسال طلب تواصل لـ ${user.firstName}", Toast.LENGTH_SHORT).show()
+                            }
+                        },
                         modifier = Modifier.weight(1f),
                         shape = RoundedCornerShape(8.dp)
                     ) {

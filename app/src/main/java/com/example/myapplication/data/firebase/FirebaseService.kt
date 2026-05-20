@@ -60,9 +60,39 @@ object FirebaseService {
         val interestMap = hashMapOf(
             "fromId" to uid,
             "toId" to targetUserId,
-            "timestamp" to System.currentTimeMillis()
+            "timestamp" to System.currentTimeMillis(),
+            "type" to "LIKE"
         )
         db.collection("interests").add(interestMap).await()
+    }
+
+    // Send Formal Request
+    suspend fun sendMarriageRequest(targetUserId: String) {
+        val uid = auth.currentUser?.uid ?: return
+        val requestMap = hashMapOf(
+            "fromId" to uid,
+            "toId" to targetUserId,
+            "timestamp" to System.currentTimeMillis(),
+            "type" to "FORMAL_REQUEST",
+            "status" to "PENDING"
+        )
+        db.collection("interests").add(requestMap).await()
+    }
+
+    // Get My Profile Data
+    suspend fun getMyProfile(): User? {
+        val uid = auth.currentUser?.uid ?: return null
+        val doc = usersCollection.document(uid).get().await()
+        return if (doc.exists()) {
+            User(
+                id = doc.getString("id") ?: "",
+                firstName = doc.getString("firstName") ?: "",
+                age = (doc.getLong("age") ?: 0).toInt(),
+                profession = doc.getString("profession") ?: "",
+                location = doc.getString("location") ?: "",
+                profileImageUrl = doc.getString("profileImageUrl") ?: ""
+            )
+        } else null
     }
 
     // Real-time Messages Flow
