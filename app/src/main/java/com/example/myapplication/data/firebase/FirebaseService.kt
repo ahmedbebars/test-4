@@ -1,6 +1,7 @@
 package com.example.myapplication.data.firebase
 
 import com.example.myapplication.data.model.ChatMessage
+import com.example.myapplication.data.model.GuardianStatus
 import com.example.myapplication.data.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -90,9 +91,20 @@ object FirebaseService {
                 age = (doc.getLong("age") ?: 0).toInt(),
                 profession = doc.getString("profession") ?: "",
                 location = doc.getString("location") ?: "",
-                profileImageUrl = doc.getString("profileImageUrl") ?: ""
+                profileImageUrl = doc.getString("profileImageUrl") ?: "",
+                guardianEmail = doc.getString("guardianEmail"),
+                guardianStatus = GuardianStatus.valueOf(doc.getString("guardianStatus") ?: "NOT_INVITED")
             )
         } else null
+    }
+
+    // Invite Guardian
+    suspend fun inviteGuardian(email: String) {
+        val uid = auth.currentUser?.uid ?: return
+        usersCollection.document(uid).update(
+            "guardianEmail", email,
+            "guardianStatus", GuardianStatus.PENDING.name
+        ).await()
     }
 
     // Real-time Messages Flow

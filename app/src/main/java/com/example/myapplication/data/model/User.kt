@@ -23,8 +23,16 @@ data class User(
     val polygamyStance: PolygamyStance = PolygamyStance.REJECT,
     val travelWillingness: TravelWillingness = TravelWillingness.DISCUSSABLE,
     val smoke: Boolean = false,
-    val wantChildren: Boolean = true
+    val wantChildren: Boolean = true,
+    
+    // Guardian Integration
+    val guardianEmail: String? = null,
+    val guardianStatus: GuardianStatus = GuardianStatus.NOT_INVITED
 )
+
+enum class GuardianStatus {
+    NOT_INVITED, PENDING, APPROVED, REJECTED
+}
 
 enum class PhotoPrivacy {
     PUBLIC, BLURRED, PRIVATE
