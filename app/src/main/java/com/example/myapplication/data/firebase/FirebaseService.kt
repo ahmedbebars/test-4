@@ -54,6 +54,17 @@ object FirebaseService {
         chatsCollection.document(chatRoomId).collection("messages").add(messageMap).await()
     }
 
+    // Send Interest/Like
+    suspend fun sendInterest(targetUserId: String) {
+        val uid = auth.currentUser?.uid ?: return
+        val interestMap = hashMapOf(
+            "fromId" to uid,
+            "toId" to targetUserId,
+            "timestamp" to System.currentTimeMillis()
+        )
+        db.collection("interests").add(interestMap).await()
+    }
+
     // Real-time Messages Flow
     fun getMessages(chatRoomId: String): Flow<List<ChatMessage>> = callbackFlow {
         val subscription = chatsCollection.document(chatRoomId).collection("messages")

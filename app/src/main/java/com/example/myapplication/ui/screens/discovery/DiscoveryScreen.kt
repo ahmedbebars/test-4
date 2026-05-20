@@ -24,7 +24,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
+import com.example.myapplication.data.firebase.FirebaseService
+import kotlinx.coroutines.launch
 import com.example.myapplication.data.model.PhotoPrivacy
 import com.example.myapplication.data.model.User
 import com.example.myapplication.data.model.VerificationLevel
@@ -129,6 +134,8 @@ fun ProfileCompletionCard() {
 fun UserCard(user: User) {
     var expanded by remember { mutableStateOf(false) }
     var isLiked by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     
     val scale by animateFloatAsState(
         targetValue = if (isLiked) 1.2f else 1f,
@@ -236,7 +243,15 @@ fun UserCard(user: User) {
                     }
                     
                     IconButton(
-                        onClick = { isLiked = !isLiked },
+                        onClick = { 
+                            isLiked = !isLiked
+                            if (isLiked) {
+                                scope.launch {
+                                    FirebaseService.sendInterest(user.id)
+                                    Toast.makeText(context, "تم إبداء الاهتمام بـ ${user.firstName}", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        },
                         modifier = Modifier.graphicsLayer(scaleX = scale, scaleY = scale)
                     ) {
                         Icon(
