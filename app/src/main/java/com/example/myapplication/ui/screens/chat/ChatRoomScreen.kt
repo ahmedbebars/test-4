@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Translate
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -21,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myapplication.data.firebase.FirebaseService
 import com.example.myapplication.data.model.ChatMessage
+import com.example.myapplication.util.TranslationHelper
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -89,6 +91,9 @@ fun ChatRoomScreen(participantName: String, onBackClick: () -> Unit) {
 @Composable
 fun MessageBubble(message: ChatMessage, isMe: Boolean) {
     var visible by remember { mutableStateOf(false) }
+    var isTranslated by remember { mutableStateOf(false) }
+    val displayedText = if (isTranslated) TranslationHelper.translate(message.text) else message.text
+
     LaunchedEffect(Unit) { visible = true }
 
     AnimatedVisibility(
@@ -108,11 +113,26 @@ fun MessageBubble(message: ChatMessage, isMe: Boolean) {
                     bottomEnd = if (isMe) 0.dp else 16.dp
                 )
             ) {
-                Text(
-                    text = message.text,
-                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
-                    color = if (isMe) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                Column(modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp)) {
+                    Text(
+                        text = displayedText,
+                        color = if (isMe) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    if (!isMe) {
+                        Spacer(modifier = Modifier.height(4.dp))
+                        IconButton(
+                            onClick = { isTranslated = !isTranslated },
+                            modifier = Modifier.size(20.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Translate,
+                                contentDescription = "Translate",
+                                tint = if (isTranslated) MaterialTheme.colorScheme.primary else Color.Gray,
+                                modifier = Modifier.size(16.dp)
+                            )
+                        }
+                    }
+                }
             }
             Text(
                 text = SimpleDateFormat("hh:mm a", Locale.getDefault()).format(Date(message.timestamp)),
