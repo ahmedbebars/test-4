@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import android.widget.Toast
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.os.LocaleListCompat
+import com.example.myapplication.util.MatchScoreCalculator
 import com.example.myapplication.data.firebase.FirebaseService
 import kotlinx.coroutines.launch
 import com.example.myapplication.data.model.*
@@ -156,6 +157,9 @@ fun UserCard(user: User) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     
+    // Simulate compatibility score with current user
+    val compatibilityScore = remember(user) { MatchScoreCalculator.calculateScore(MockData.sampleUsers[1], user) }
+    
     val scale by animateFloatAsState(
         targetValue = if (isLiked) 1.2f else 1f,
         animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy),
@@ -220,7 +224,14 @@ fun UserCard(user: User) {
             }
 
             Column(modifier = Modifier.padding(16.dp)) {
-                Text("${user.firstName}، ${user.age}", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text("${user.firstName}، ${user.age}", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+                    MatchScoreBadge(compatibilityScore)
+                }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(Icons.Default.LocationOn, null, modifier = Modifier.size(16.dp), tint = Color.Gray)
                     Text(user.location, style = MaterialTheme.typography.bodyMedium, color = Color.Gray)
@@ -318,13 +329,18 @@ fun LanguageSelectionDialog(onDismiss: () -> Unit, onLanguageSelected: (String) 
                          . v e r t i c a l S c r o l l ( r e m e m b e r S c r o l l S t a t e ( ) ) , 
                  v e r t i c a l A r r a n g e m e n t   =   A r r a n g e m e n t . s p a c e d B y ( 1 6 . d p ) 
          )   { 
-                 T e x t ( \  
- AD'*1 
- 'D(-+ 
+                 T e x t ( \ 
+ 
+ AD'*1
+ 
+ 'D(-+
+ 
  'DE*B/E)\ ,   s t y l e   =   M a t e r i a l T h e m e . t y p o g r a p h y . h e a d l i n e S m a l l ,   f o n t W e i g h t   =   F o n t W e i g h t . B o l d ) 
  
-                 T e x t ( \ 'DE-'A8) 
- 9DI 
+                 T e x t ( \ 'DE-'A8)
+ 
+ 9DI
+ 
  'D5D')\ ) 
                  R o w ( h o r i z o n t a l A r r a n g e m e n t   =   A r r a n g e m e n t . s p a c e d B y ( 8 . d p ) )   { 
                          P r a y e r F r e q u e n c y . v a l u e s ( ) . f o r E a c h   { 
@@ -336,7 +352,8 @@ fun LanguageSelectionDialog(onDismiss: () -> Unit, onLanguageSelected: (String) 
                          } 
                  } 
  
-                 T e x t ( \ 'D'3*9/'/ 
+                 T e x t ( \ 'D'3*9/'/
+ 
  DD3A1\ ) 
                  R o w ( h o r i z o n t a l A r r a n g e m e n t   =   A r r a n g e m e n t . s p a c e d B y ( 8 . d p ) )   { 
                          T r a v e l W i l l i n g n e s s . v a l u e s ( ) . f o r E a c h   { 
@@ -352,9 +369,47 @@ fun LanguageSelectionDialog(onDismiss: () -> Unit, onLanguageSelected: (String) 
                          o n C l i c k   =   o n A p p l y , 
                          m o d i f i e r   =   M o d i f i e r . f i l l M a x W i d t h ( ) 
                  )   { 
-                         T e x t ( \ *7(JB 
+                         T e x t ( \ *7(JB
+ 
  'DAD'*1\ ) 
                  } 
          } 
- }  
+ } 
+ 
+ 
+ @ C o m p o s a b l e 
+ f u n   M a t c h S c o r e B a d g e ( s c o r e :   I n t )   { 
+         v a l   c o l o r   =   w h e n   { 
+                 s c o r e   > =   8 0   - >   C o l o r ( 0 x F F 4 C A F 5 0 )   / /   G r e e n 
+                 s c o r e   > =   5 0   - >   C o l o r ( 0 x F F F F C 1 0 7 )   / /   Y e l l o w 
+                 e l s e   - >   C o l o r ( 0 x F F F 4 4 3 3 6 )   / /   R e d 
+         } 
+         
+         S u r f a c e ( 
+                 c o l o r   =   c o l o r . c o p y ( a l p h a   =   0 . 1 f ) , 
+                 s h a p e   =   R o u n d e d C o r n e r S h a p e ( 2 4 . d p ) , 
+                 b o r d e r   =   a n d r o i d x . c o m p o s e . f o u n d a t i o n . B o r d e r S t r o k e ( 1 . d p ,   c o l o r ) 
+         )   { 
+                 R o w ( 
+                         m o d i f i e r   =   M o d i f i e r . p a d d i n g ( h o r i z o n t a l   =   1 2 . d p ,   v e r t i c a l   =   4 . d p ) , 
+                         v e r t i c a l A l i g n m e n t   =   A l i g n m e n t . C e n t e r V e r t i c a l l y 
+                 )   { 
+                         T e x t ( 
+                                 t e x t   =   \ 
+ 
+ \ % \ , 
+                                 c o l o r   =   c o l o r , 
+                                 f o n t W e i g h t   =   F o n t W e i g h t . B o l d , 
+                                 f o n t S i z e   =   1 2 . s p 
+                         ) 
+                         S p a c e r ( m o d i f i e r   =   M o d i f i e r . w i d t h ( 4 . d p ) ) 
+                         T e x t ( 
+                                 t e x t   =   \ *H'AB\ , 
+                                 c o l o r   =   c o l o r , 
+                                 f o n t S i z e   =   1 0 . s p 
+                         ) 
+                 } 
+         } 
+ } 
+ 
  
