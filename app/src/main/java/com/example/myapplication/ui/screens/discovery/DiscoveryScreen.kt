@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import android.widget.Toast
 import androidx.compose.ui.platform.LocalContext
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import com.example.myapplication.data.firebase.FirebaseService
 import kotlinx.coroutines.launch
