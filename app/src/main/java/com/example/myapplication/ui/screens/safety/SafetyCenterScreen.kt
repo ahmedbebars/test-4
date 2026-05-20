@@ -1,5 +1,6 @@
 package com.example.myapplication.ui.screens.safety
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -17,6 +18,8 @@ import androidx.compose.ui.unit.sp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SafetyCenterScreen(onBackClick: () -> Unit) {
+    BackHandler(onBack = onBackClick)
+
     Scaffold(
         topBar = {
             TopAppBar(

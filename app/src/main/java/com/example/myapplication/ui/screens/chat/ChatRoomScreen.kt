@@ -1,5 +1,7 @@
 package com.example.myapplication.ui.screens.chat
 
+import androidx.activity.compose.BackHandler
+import androidx.compose.animation.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -26,6 +28,8 @@ import java.util.*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChatRoomScreen(participantName: String, onBackClick: () -> Unit) {
+    BackHandler(onBack = onBackClick)
+
     var messageText by remember { mutableStateOf("") }
     val scope = rememberCoroutineScope()
     
@@ -84,31 +88,39 @@ fun ChatRoomScreen(participantName: String, onBackClick: () -> Unit) {
 
 @Composable
 fun MessageBubble(message: ChatMessage, isMe: Boolean) {
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = if (isMe) Alignment.End else Alignment.Start
+    var visible by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) { visible = true }
+
+    AnimatedVisibility(
+        visible = visible,
+        enter = slideInHorizontally(initialOffsetX = { if (isMe) it else -it }) + fadeIn()
     ) {
-        Surface(
-            color = if (isMe) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant,
-            shape = RoundedCornerShape(
-                topStart = 16.dp,
-                topEnd = 16.dp,
-                bottomStart = if (isMe) 16.dp else 0.dp,
-                bottomEnd = if (isMe) 0.dp else 16.dp
-            )
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = if (isMe) Alignment.End else Alignment.Start
         ) {
+            Surface(
+                color = if (isMe) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant,
+                shape = RoundedCornerShape(
+                    topStart = 16.dp,
+                    topEnd = 16.dp,
+                    bottomStart = if (isMe) 16.dp else 0.dp,
+                    bottomEnd = if (isMe) 0.dp else 16.dp
+                )
+            ) {
+                Text(
+                    text = message.text,
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                    color = if (isMe) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
             Text(
-                text = message.text,
-                modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
-                color = if (isMe) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
+                text = SimpleDateFormat("hh:mm a", Locale.getDefault()).format(Date(message.timestamp)),
+                fontSize = 10.sp,
+                color = Color.Gray,
+                modifier = Modifier.padding(top = 2.dp)
             )
         }
-        Text(
-            text = SimpleDateFormat("hh:mm a", Locale.getDefault()).format(Date(message.timestamp)),
-            fontSize = 10.sp,
-            color = Color.Gray,
-            modifier = Modifier.padding(top = 2.dp)
-        )
     }
 }
 

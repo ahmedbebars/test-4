@@ -2,7 +2,11 @@ package com.example.myapplication.ui.screens.discovery
 
 import androidx.activity.compose.BackHandler
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.animation.*
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.ui.draw.clip
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -15,7 +19,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.os.LocaleListCompat
@@ -89,6 +95,9 @@ fun DiscoveryScreen(onSafetyClick: () -> Unit, onChatClick: () -> Unit) {
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            item {
+                ProfileCompletionCard()
+            }
             items(MockData.sampleUsers) { user ->
                 UserCard(user)
             }
@@ -97,9 +106,41 @@ fun DiscoveryScreen(onSafetyClick: () -> Unit, onChatClick: () -> Unit) {
 }
 
 @Composable
-fun UserCard(user: User) {
+fun ProfileCompletionCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text("أكمل ملفك الشخصي", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
+            Text("وجود صور موثقة يزيد من فرصة قبولك بنسبة 300%", fontSize = 12.sp)
+            Spacer(modifier = Modifier.height(8.dp))
+            LinearProgressIndicator(
+                progress = { 0.7f },
+                modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(4.dp)),
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
+    }
+}
+
+@Composable
+fun UserCard(user: User) {
+    var expanded by remember { mutableStateOf(false) }
+    var isLiked by remember { mutableStateOf(false) }
+    
+    val scale by animateFloatAsState(
+        targetValue = if (isLiked) 1.2f else 1f,
+        animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy),
+        label = "LikeAnimation"
+    )
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .animateContentSize()
+            .clickable { expanded = !expanded },
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -159,13 +200,51 @@ fun UserCard(user: User) {
                     Text(user.location, style = MaterialTheme.typography.bodyMedium, color = Color.Gray)
                     Text(" • ${user.profession}", style = MaterialTheme.typography.bodyMedium, color = Color.Gray)
                 }
+                
                 Spacer(modifier = Modifier.height(12.dp))
-                Text(user.bio, style = MaterialTheme.typography.bodySmall, maxLines = 2)
+                
+                Text(
+                    text = user.bio,
+                    style = MaterialTheme.typography.bodySmall,
+                    maxLines = if (expanded) Int.MAX_VALUE else 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+                
+                AnimatedVisibility(visible = expanded) {
+                    Column(modifier = Modifier.padding(top = 12.dp)) {
+                        HorizontalDivider(thickness = 0.5.dp, color = Color.LightGray)
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = "المزيد من التفاصيل:",
+                            style = MaterialTheme.typography.labelLarge,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Text("التعليم: ${user.education.name}", style = MaterialTheme.typography.bodySmall)
+                        Text("الصلاة: ${user.prayerFrequency.name}", style = MaterialTheme.typography.bodySmall)
+                    }
+                }
+
                 Spacer(modifier = Modifier.height(16.dp))
-                Button(onClick = { }, modifier = Modifier.fillMaxWidth()) {
-                    Icon(Icons.Default.Favorite, null)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text("إبداء اهتمام")
+
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Button(
+                        onClick = { },
+                        modifier = Modifier.weight(1f),
+                        shape = RoundedCornerShape(8.dp)
+                    ) {
+                        Text("إرسال طلب")
+                    }
+                    
+                    IconButton(
+                        onClick = { isLiked = !isLiked },
+                        modifier = Modifier.graphicsLayer(scaleX = scale, scaleY = scale)
+                    ) {
+                        Icon(
+                            imageVector = if (isLiked) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                            contentDescription = null,
+                            tint = if (isLiked) Color.Red else Color.Gray
+                        )
+                    }
                 }
             }
         }
