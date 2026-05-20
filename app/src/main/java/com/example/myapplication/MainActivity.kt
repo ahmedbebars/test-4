@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import com.example.myapplication.data.firebase.FirebaseService
+import com.example.myapplication.ui.screens.auth.EmailVerificationScreen
 import com.example.myapplication.ui.screens.auth.LoginScreen
 import com.example.myapplication.ui.screens.auth.SignUpScreen
 import com.example.myapplication.ui.screens.chat.ChatListScreen
@@ -31,7 +32,7 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
 enum class MithaqScreen {
-    LOGIN, SIGNUP, PROFILE_SETUP, DISCOVERY, CHAT_LIST, CHAT_ROOM, SAFETY_CENTER
+    LOGIN, SIGNUP, VERIFY_EMAIL, PROFILE_SETUP, DISCOVERY, CHAT_LIST, CHAT_ROOM, SAFETY_CENTER
 }
 
 class MainActivity : ComponentActivity() {
@@ -47,7 +48,12 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val auth = FirebaseAuth.getInstance()
                     var currentScreen by remember { 
-                        mutableStateOf(if (auth.currentUser != null) MithaqScreen.DISCOVERY else MithaqScreen.LOGIN) 
+                        val user = auth.currentUser
+                        mutableStateOf(
+                            if (user != null) {
+                                if (user.isEmailVerified) MithaqScreen.DISCOVERY else MithaqScreen.VERIFY_EMAIL
+                            } else MithaqScreen.LOGIN
+                        )
                     }
                     var selectedChatRoomName by remember { mutableStateOf("") }
 
@@ -60,8 +66,17 @@ class MainActivity : ComponentActivity() {
                         }
                         MithaqScreen.SIGNUP -> {
                             SignUpScreen(
-                                onSignUpSuccess = { currentScreen = MithaqScreen.PROFILE_SETUP },
+                                onSignUpSuccess = { currentScreen = MithaqScreen.VERIFY_EMAIL },
                                 onNavigateToLogin = { currentScreen = MithaqScreen.LOGIN }
+                            )
+                        }
+                        MithaqScreen.VERIFY_EMAIL -> {
+                            EmailVerificationScreen(
+                                onVerified = { currentScreen = MithaqScreen.PROFILE_SETUP },
+                                onLogout = {
+                                    auth.signOut()
+                                    currentScreen = MithaqScreen.LOGIN
+                                }
                             )
                         }
                         MithaqScreen.PROFILE_SETUP -> {
