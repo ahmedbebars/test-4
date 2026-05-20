@@ -39,6 +39,7 @@ import com.example.myapplication.ui.theme.ThemeManager
 fun DiscoveryScreen(onSafetyClick: () -> Unit, onChatClick: () -> Unit, onProfileClick: () -> Unit) {
     var showLanguageDialog by remember { mutableStateOf(false) }
     var showFilterSheet by remember { mutableStateOf(false) }
+    var showPremiumDialog by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
     var filterCriteria by remember { mutableStateOf(FilterCriteria()) }
 
@@ -51,6 +52,10 @@ fun DiscoveryScreen(onSafetyClick: () -> Unit, onChatClick: () -> Unit, onProfil
                 showLanguageDialog = false
             }
         )
+    }
+
+    if (showPremiumDialog) {
+        PremiumUpgradeDialog(onDismiss = { showPremiumDialog = false })
     }
 
     if (showFilterSheet) {
@@ -124,7 +129,7 @@ fun DiscoveryScreen(onSafetyClick: () -> Unit, onChatClick: () -> Unit, onProfil
                 ProfileCompletionCard()
             }
             items(MockData.sampleUsers) { user ->
-                UserCard(user)
+                UserCard(user, onLimitExceeded = { showPremiumDialog = true })
             }
         }
     }
@@ -151,7 +156,7 @@ fun ProfileCompletionCard() {
 }
 
 @Composable
-fun UserCard(user: User) {
+fun UserCard(user: User, onLimitExceeded: () -> Unit) {
     var expanded by remember { mutableStateOf(false) }
     var isLiked by remember { mutableStateOf(false) }
     val context = LocalContext.current
@@ -267,8 +272,12 @@ fun UserCard(user: User) {
                     Button(
                         onClick = { 
                             scope.launch {
-                                FirebaseService.sendMarriageRequest(user.id)
-                                Toast.makeText(context, "تم إرسال طلب تواصل لـ ${user.firstName}", Toast.LENGTH_SHORT).show()
+                                val success = FirebaseService.sendMarriageRequest(user.id)
+                                if (success) {
+                                    Toast.makeText(context, "تم إرسال طلب تواصل لـ ${user.firstName}", Toast.LENGTH_SHORT).show()
+                                } else {
+                                    onLimitExceeded()
+                                }
                             }
                         },
                         modifier = Modifier.weight(1f),

@@ -67,17 +67,40 @@ object FirebaseService {
         db.collection("interests").add(interestMap).await()
     }
 
-    // Send Formal Request
-    suspend fun sendMarriageRequest(targetUserId: String) {
-        val uid = auth.currentUser?.uid ?: return
+    // Send Marriage Request with Daily Limit Check
+    suspend fun sendMarriageRequest(targetUserId: String): Boolean {
+        val uid = auth.currentUser?.uid ?: return false
+        
+        // 1. Check if user is premium or within limit (Logic for MVP: Allow 3 per day)
+        val userDoc = usersCollection.document(uid).get().await()
+        val dailyCount = userDoc.getLong("dailyRequestsCount") ?: 0
+        val lastReset = userDoc.getLong("lastRequestReset") ?: 0L
+        
+        val currentTime = System.currentTimeMillis()
+        val isNewDay = (currentTime - lastReset) > 24 * 60 * 60 * 1000
+
+        if (!isNewDay && dailyCount >= 3) {
+            return false // Limit exceeded
+        }
+
+        // 2. Perform Request
         val requestMap = hashMapOf(
             "fromId" to uid,
             "toId" to targetUserId,
-            "timestamp" to System.currentTimeMillis(),
+            "timestamp" to currentTime,
             "type" to "FORMAL_REQUEST",
             "status" to "PENDING"
         )
         db.collection("interests").add(requestMap).await()
+
+        // 3. Update User Counters
+        val newCount = if (isNewDay) 1 else dailyCount + 1
+        usersCollection.document(uid).update(
+            "dailyRequestsCount", newCount,
+            "lastRequestReset", if (isNewDay) currentTime else lastReset
+        ).await()
+        
+        return true
     }
 
     // Get My Profile Data
