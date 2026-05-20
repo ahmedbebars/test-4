@@ -9,4 +9,6 @@
     <string name="settings">الإعدادات</string>
     <string name="dark_mode">الوضع الليلي</string>
     <string name="language">اللغة</string>
+    <!-- Replace this with your actual Web Client ID from Firebase Console if google-services doesn't provide it -->
+    <string name="default_web_client_id">YOUR_WEB_CLIENT_ID_HERE</string>
 </resources>
