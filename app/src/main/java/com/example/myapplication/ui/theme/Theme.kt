@@ -17,21 +17,25 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
-    primary = MithaqPrimary,
-    secondary = MithaqSecondary,
-    tertiary = Pink80,
-    background = Color(0xFF121212),
-    surface = Color(0xFF121212),
+    primary = MithaqEmeraldPrimaryDark,
+    onPrimary = MithaqEmeraldOnPrimaryDark,
+    primaryContainer = MithaqEmeraldContainerDark,
+    secondary = MithaqGoldSecondaryDark,
+    onSecondary = MithaqGoldOnSecondaryDark,
+    background = MithaqDarkBackground,
+    surface = MithaqDarkSurface,
+    error = MithaqDarkError
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = MithaqPrimary,
-    secondary = MithaqSecondary,
-    tertiary = Pink40,
-    background = MithaqBackground,
-    surface = MithaqSurface,
-    onPrimary = Color.White,
-    onSecondary = Color.White,
+    primary = MithaqEmeraldPrimary,
+    onPrimary = MithaqEmeraldOnPrimary,
+    primaryContainer = MithaqEmeraldContainer,
+    secondary = MithaqGoldSecondary,
+    onSecondary = MithaqGoldOnSecondary,
+    background = MithaqLightBackground,
+    surface = MithaqLightSurface,
+    error = MithaqLightError,
     onBackground = Color(0xFF1C1B1F),
     onSurface = Color(0xFF1C1B1F),
 )

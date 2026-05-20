@@ -6,6 +6,8 @@ import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.ui.draw.clip
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -325,100 +327,107 @@ fun LanguageSelectionDialog(onDismiss: () -> Unit, onLanguageSelected: (String) 
     )
 }
 
- @ C o m p o s a b l e 
- f u n   F i l t e r B o t t o m S h e e t C o n t e n t ( 
-         c r i t e r i a :   F i l t e r C r i t e r i a , 
-         o n C r i t e r i a C h a n g e :   ( F i l t e r C r i t e r i a )   - >   U n i t , 
-         o n A p p l y :   ( )   - >   U n i t 
- )   { 
-         C o l u m n ( 
-                 m o d i f i e r   =   M o d i f i e r 
-                         . f i l l M a x W i d t h ( ) 
-                         . p a d d i n g ( 2 4 . d p ) 
-                         . v e r t i c a l S c r o l l ( r e m e m b e r S c r o l l S t a t e ( ) ) , 
-                 v e r t i c a l A r r a n g e m e n t   =   A r r a n g e m e n t . s p a c e d B y ( 1 6 . d p ) 
-         )   { 
-                 T e x t ( \ 
- 
- AD'*1
- 
- 'D(-+
- 
- 'DE*B/E)\ ,   s t y l e   =   M a t e r i a l T h e m e . t y p o g r a p h y . h e a d l i n e S m a l l ,   f o n t W e i g h t   =   F o n t W e i g h t . B o l d ) 
- 
-                 T e x t ( \ 'DE-'A8)
- 
- 9DI
- 
- 'D5D')\ ) 
-                 R o w ( h o r i z o n t a l A r r a n g e m e n t   =   A r r a n g e m e n t . s p a c e d B y ( 8 . d p ) )   { 
-                         P r a y e r F r e q u e n c y . v a l u e s ( ) . f o r E a c h   { 
-                                 F i l t e r C h i p ( 
-                                         s e l e c t e d   =   c r i t e r i a . r e q u i r e d P r a y e r F r e q u e n c y   = =   i t , 
-                                         o n C l i c k   =   {   o n C r i t e r i a C h a n g e ( c r i t e r i a . c o p y ( r e q u i r e d P r a y e r F r e q u e n c y   =   i t ) )   } , 
-                                         l a b e l   =   {   T e x t ( i t . n a m e )   } 
-                                 ) 
-                         } 
-                 } 
- 
-                 T e x t ( \ 'D'3*9/'/
- 
- DD3A1\ ) 
-                 R o w ( h o r i z o n t a l A r r a n g e m e n t   =   A r r a n g e m e n t . s p a c e d B y ( 8 . d p ) )   { 
-                         T r a v e l W i l l i n g n e s s . v a l u e s ( ) . f o r E a c h   { 
-                                 F i l t e r C h i p ( 
-                                         s e l e c t e d   =   c r i t e r i a . t r a v e l W i l l i n g n e s s   = =   i t , 
-                                         o n C l i c k   =   {   o n C r i t e r i a C h a n g e ( c r i t e r i a . c o p y ( t r a v e l W i l l i n g n e s s   =   i t ) )   } , 
-                                         l a b e l   =   {   T e x t ( i t . n a m e )   } 
-                                 ) 
-                         } 
-                 } 
- 
-                 B u t t o n ( 
-                         o n C l i c k   =   o n A p p l y , 
-                         m o d i f i e r   =   M o d i f i e r . f i l l M a x W i d t h ( ) 
-                 )   { 
-                         T e x t ( \ *7(JB
- 
- 'DAD'*1\ ) 
-                 } 
-         } 
- } 
- 
- 
- @ C o m p o s a b l e 
- f u n   M a t c h S c o r e B a d g e ( s c o r e :   I n t )   { 
-         v a l   c o l o r   =   w h e n   { 
-                 s c o r e   > =   8 0   - >   C o l o r ( 0 x F F 4 C A F 5 0 )   / /   G r e e n 
-                 s c o r e   > =   5 0   - >   C o l o r ( 0 x F F F F C 1 0 7 )   / /   Y e l l o w 
-                 e l s e   - >   C o l o r ( 0 x F F F 4 4 3 3 6 )   / /   R e d 
-         } 
-         
-         S u r f a c e ( 
-                 c o l o r   =   c o l o r . c o p y ( a l p h a   =   0 . 1 f ) , 
-                 s h a p e   =   R o u n d e d C o r n e r S h a p e ( 2 4 . d p ) , 
-                 b o r d e r   =   a n d r o i d x . c o m p o s e . f o u n d a t i o n . B o r d e r S t r o k e ( 1 . d p ,   c o l o r ) 
-         )   { 
-                 R o w ( 
-                         m o d i f i e r   =   M o d i f i e r . p a d d i n g ( h o r i z o n t a l   =   1 2 . d p ,   v e r t i c a l   =   4 . d p ) , 
-                         v e r t i c a l A l i g n m e n t   =   A l i g n m e n t . C e n t e r V e r t i c a l l y 
-                 )   { 
-                         T e x t ( 
-                                 t e x t   =   \ 
- 
- \ % \ , 
-                                 c o l o r   =   c o l o r , 
-                                 f o n t W e i g h t   =   F o n t W e i g h t . B o l d , 
-                                 f o n t S i z e   =   1 2 . s p 
-                         ) 
-                         S p a c e r ( m o d i f i e r   =   M o d i f i e r . w i d t h ( 4 . d p ) ) 
-                         T e x t ( 
-                                 t e x t   =   \ *H'AB\ , 
-                                 c o l o r   =   c o l o r , 
-                                 f o n t S i z e   =   1 0 . s p 
-                         ) 
-                 } 
-         } 
- } 
- 
- 
+@Composable
+fun FilterBottomSheetContent(
+    criteria: FilterCriteria,
+    onCriteriaChange: (FilterCriteria) -> Unit,
+    onApply: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(24.dp)
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        Text("فلاتر البحث المتقدمة", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+
+        Text("المحافظة على الصلاة")
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            PrayerFrequency.values().forEach {
+                FilterChip(
+                    selected = criteria.requiredPrayerFrequency == it,
+                    onClick = { onCriteriaChange(criteria.copy(requiredPrayerFrequency = it)) },
+                    label = { Text(it.name) }
+                )
+            }
+        }
+
+        Text("الاستعداد للسفر")
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            TravelWillingness.values().forEach {
+                FilterChip(
+                    selected = criteria.travelWillingness == it,
+                    onClick = { onCriteriaChange(criteria.copy(travelWillingness = it)) },
+                    label = { Text(it.name) }
+                )
+            }
+        }
+
+        Button(
+            onClick = onApply,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("تطبيق الفلاتر")
+        }
+    }
+}
+
+
+@Composable
+fun MatchScoreBadge(score: Int) {
+    val color = when {
+        score >= 80 -> Color(0xFF4CAF50) // Green
+        score >= 50 -> Color(0xFFFFC107) // Yellow
+        else -> Color(0xFFF44336) // Red
+    }
+    
+    Surface(
+        color = color.copy(alpha = 0.1f),
+        shape = RoundedCornerShape(24.dp),
+        border = androidx.compose.foundation.BorderStroke(1.dp, color)
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "$score%",
+                color = color,
+                fontWeight = FontWeight.Bold,
+                fontSize = 12.sp
+            )
+            Spacer(modifier = Modifier.width(4.dp))
+            Text(
+                text = "توافق",
+                color = color,
+                fontSize = 10.sp
+            )
+        }
+    }
+}
+
+@Composable
+fun PremiumUpgradeDialog(onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("ترقية للحساب المميز", fontWeight = FontWeight.Bold) },
+        text = {
+            Column {
+                Text("لقد استنفدت حدود التواصل المجانية لهذا اليوم (3 طلبات).", fontSize = 14.sp)
+                Spacer(modifier = Modifier.height(8.dp))
+                Text("اشترك في ميثاق المميز للحصول على تواصل غير محدود ومميزات حصرية أخرى.", fontSize = 14.sp, color = MaterialTheme.colorScheme.primary)
+            }
+        },
+        confirmButton = {
+            Button(onClick = onDismiss) {
+                Text("مشاهدة الخطط")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("إغلاق")
+            }
+        }
+    )
+}
