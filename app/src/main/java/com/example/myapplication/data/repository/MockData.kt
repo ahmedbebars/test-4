@@ -5,40 +5,37 @@ import com.example.myapplication.data.model.*
 object MockData {
     val sampleUsers = listOf(
         User(
-            id = "1",
-            firstName = "سارة",
-            age = 26,
+            userId = "1",
+            basics = Basics(firstName = "سارة", age = 26, city = "القاهرة"),
             gender = Gender.FEMALE,
             socialStatus = SocialStatus.SINGLE,
             profession = "معلمة",
             location = "القاهرة",
-            religion = ReligiousCommitment.RELIGIOUS,
+            prayerFrequency = PrayerFrequency.ALWAYS,
             photoPrivacyType = PhotoPrivacy.BLURRED,
             verificationLevel = VerificationLevel.IDENTITY_VERIFIED,
             bio = "أبحث عن شخص جاد ومحترم يقدر الحياة الزوجية."
         ),
         User(
-            id = "2",
-            firstName = "أحمد",
-            age = 31,
+            userId = "2",
+            basics = Basics(firstName = "أحمد", age = 31, city = "الرياض"),
             gender = Gender.MALE,
             socialStatus = SocialStatus.SINGLE,
             profession = "مهندس برمجيات",
             location = "الرياض",
-            religion = ReligiousCommitment.MODERATE,
+            prayerFrequency = PrayerFrequency.SOMETIMES,
             photoPrivacyType = PhotoPrivacy.PUBLIC,
             verificationLevel = VerificationLevel.PHOTO_VERIFIED,
             bio = "مهتم بالثقافة والرياضة، وأسعى لبناء أسرة مستقرة."
         ),
         User(
-            id = "3",
-            firstName = "ليلى",
-            age = 29,
+            userId = "3",
+            basics = Basics(firstName = "ليلى", age = 29, city = "دبي"),
             gender = Gender.FEMALE,
             socialStatus = SocialStatus.SINGLE,
             profession = "طبيبة",
             location = "دبي",
-            religion = ReligiousCommitment.VERY_RELIGIOUS,
+            prayerFrequency = PrayerFrequency.ALWAYS,
             photoPrivacyType = PhotoPrivacy.BLURRED,
             bio = "أبحث عن شريك متفهم وطموح."
         )

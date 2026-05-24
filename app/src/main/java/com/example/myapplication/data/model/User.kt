@@ -14,14 +14,26 @@ data class User(
     val verificationLevel: VerificationLevel = VerificationLevel.NONE,
     val isPremium: Boolean = false,
     
-    // Legacy fields for backward compatibility with existing UI
+    // Guardian Integration
+    val guardianEmail: String? = null,
+    val guardianStatus: GuardianStatus = GuardianStatus.NOT_INVITED,
+    
+    // Compatibility fields
     val id: String = userId,
     val firstName: String = basics.firstName,
     val age: Int = basics.age,
     val profession: String = lifestyle.occupation,
     val location: String = basics.city,
     val prayerFrequency: PrayerFrequency = islamicValues.toPrayerFrequency(),
-    val photoPrivacyType: PhotoPrivacy = PhotoPrivacy.BLURRED
+    val photoPrivacyType: PhotoPrivacy = PhotoPrivacy.BLURRED,
+    
+    // Direct access for legacy code (using proper types)
+    val gender: Gender = Gender.UNKNOWN,
+    val socialStatus: SocialStatus = SocialStatus.SINGLE,
+    val travelWillingness: TravelWillingness = TravelWillingness.DISCUSSABLE,
+    val smoke: Boolean = false,
+    val wantChildren: Boolean = true,
+    val education: EducationLevel = EducationLevel.OTHER
 )
 
 data class Basics(
@@ -69,4 +81,8 @@ fun IslamicValues.toPrayerFrequency(): PrayerFrequency {
 
 enum class PhotoPrivacy {
     PUBLIC, BLURRED, PRIVATE
+}
+
+enum class GuardianStatus {
+    NOT_INVITED, PENDING, APPROVED, REJECTED
 }
